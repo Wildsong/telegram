@@ -2,6 +2,7 @@
 #
 import platform
 from datetime import datetime
+import json
 import telegram
 from config import Config
 
@@ -17,7 +18,8 @@ rval = bot.send_location(chat_id=Config.CHAT_ID, latitude=46.187906, longitude=-
 print(rval)
 
 print("send_photo")
-rval = bot.send_photo(chat_id=Config.CHAT_ID, photo="https://wiki.wildsong.biz/images/2/23/Tenrec.png")
+url="https://piction.clevelandart.org/cma/ump.di?e=1FD7F29C52D63B20747360F6AA0BFC91A8BE622CA9B2DA71B38946D60C50DED9&s=21&se=98193207&v=5&f=2002.89_o2.jpg"
+rval = bot.send_photo(chat_id=Config.CHAT_ID, photo=url)
 print(rval)
 
 

@@ -18,7 +18,7 @@ python send_message.py
 ```
 
 If you have set up .env correctly you should see some messages appear on your phone including
-one text, one map, and a picture of a tenrec.
+one text, one map, and a picture from the Cleveland Art Museum collection.
 
 ## Docs
 
