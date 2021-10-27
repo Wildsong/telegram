@@ -7,10 +7,11 @@ import telegram
 from config import Config
 
 hostname = platform.node()
+now = datetime.now()
 bot = telegram.Bot(token=Config.BOT_TOKEN)
 
 print("send_message")
-rval = bot.send_message(chat_id=Config.CHAT_ID, text="This is a message from %s." % hostname)
+rval = bot.send_message(chat_id=Config.CHAT_ID, text="Here at %s it's %s." % (hostname, now))
 print(rval)
 
 print("send_location")
