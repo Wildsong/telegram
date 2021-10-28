@@ -38,10 +38,8 @@ one text, one map, and a picture from the Cleveland Art Museum collection.
 
 ## Healthcheck
 
-The scripts healthcheck.py
-is currently tuned for my servers, 
-it checks file mount points and urls
-from lists that are embedded in it.
+The scripts healthcheck.py is currently tuned for my servers, 
+it checks file mount points and urls from lists that are embedded in it.
 
 If run with "-v" it generates a report on everything it's checked.
 It will always generate an error report if anything fails.
@@ -50,6 +48,15 @@ is to run it regularly from crontab and it will generate both
 messages and emails.
 
 FIXME -- I might make it more general purpose someday. A YAML file, those are popular. Or JSON.
+
+### Deploy healthceck.py
+
+Set up the conda environment as for "notify.py" and put the script on your path. Call it from crontab.
+
+```bash
+cp healthcheck.py config.py ~/bin
+```
+
 
 ## Docs
 
