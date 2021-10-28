@@ -2,7 +2,6 @@
 #
 import platform
 from datetime import datetime
-import json
 import telegram
 from config import Config
 

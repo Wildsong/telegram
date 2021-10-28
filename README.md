@@ -9,9 +9,25 @@ My intention at this time is to use Telegram to send system status information t
 
 Get an account and do the steps to set up a bot.
 
+FIXME, config.py should be able to handle either test or deploy modes.
+
+In testing I did something like this,
+
 ```bash
 cp sample.env .env
 emacs .env
+```
+
+In deployment I do something like this
+
+```bash
+mkdir -p ~/.conda/envs/telegram/etc/conda/activate.d
+cp sample.env_vars.sh ~/.conda/envs/telegram/etc/conda/activate.d/env_vars.sh
+emacs ~/.conda/envs/telegram/etc/conda/activate.d/env_vars.sh
+chmod +x ~/.conda/envs/telegram/etc/conda/activate.d/env_vars.sh
+```
+
+```bash
 conda create -n telegram python python-telegram-bot python-dotenv -c conda-forge
 conda activate telegram
 python send_message.py
@@ -19,6 +35,21 @@ python send_message.py
 
 If you have set up .env correctly you should see some messages appear on your phone including
 one text, one map, and a picture from the Cleveland Art Museum collection.
+
+## Healthcheck
+
+The scripts healthcheck.py
+is currently tuned for my servers, 
+it checks file mount points and urls
+from lists that are embedded in it.
+
+If run with "-v" it generates a report on everything it's checked.
+It will always generate an error report if anything fails.
+It sends the report via Telegram and "print", the intention
+is to run it regularly from crontab and it will generate both
+messages and emails.
+
+FIXME -- I might make it more general purpose someday. A YAML file, those are popular. Or JSON.
 
 ## Docs
 

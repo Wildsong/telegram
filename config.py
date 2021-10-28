@@ -1,8 +1,8 @@
 import os
-from dotenv import load_dotenv
 
 class Config(object):
-    load_dotenv()
+#    import dotenv
+#    load_dotenv()
 
     BOT_NAME = os.environ.get("BOT_NAME")
     BOT_USER = os.environ.get("BOT_USER")
