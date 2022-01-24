@@ -63,6 +63,8 @@ if __name__ == "__main__":
         verbose = sys.argv[1] == '-v'
     except:
         pass
+
+    sys.stderr = None # Avoid whiny messages about verify=False
                 
     #verbose = True # Force verbose mode
     #check_folders("/foo") # Force an error
