@@ -11,37 +11,25 @@ from config import Config
 msg = ""
 errors = ""
 
-def check_folders(path):
+def check_folders(mountpoint):
     """
-    Check volumes are mounted by looking for files in each one.
-    
-    There are currently 3 folders mounted via CIFS from /etc/fstab
-    and there have to be a few files in each of them.
+    Check this volume mounted by looking for files in it.
     """
     global msg, errors
 
     # These are mount points for folders on cc-files server,
     # the mount points always exist but have files in them if they are
     # working correctly.
-    folders = glob(path + "/*")
-    if len(folders)==0:
-        errors += "Mount point missing \"%s\"\n" % path
+    files = glob(mountpoint + "/*")
+    if len(files)==0:
+        errors += "Mount point problem \"%s\"\n" % mountpoint
         return 1
 
-    msg += "Mount point \"%s\"\n" % path
-
-    for folder in folders:
-        try:
-            count = len(glob(os.path.join(folder, "*")))
-            if count: 
-                msg += "\"%s\" has %d files GOOD\n" % (folder, count)
-                continue
-        except Exception as e:
-            errors += str(e)
-        errors += "Folder is not mounted, \"%s\"\n" % folder
-        
+    count = len(files)
+    msg += "Mount point \"%s\" " % mountpoint
+    if count: 
+        msg += "%d files; GOOD\!" % count
     msg += "\n"
-
 
 def check_url(url,name):
     """
@@ -53,45 +41,53 @@ def check_url(url,name):
     # Normally it should be high enough to accomodate slow services
     # such as the map proxy.
     t = 8 
-    escaped = url.replace(')', '\)')
+    url_escaped = url.replace(')', '\)')
+    name = name.replace('-', '\-')
     try:
-        r = requests.get(url, timeout=t)
+        r = requests.get(url, timeout=t, verify=False)
         if r.status_code == 200: 
-            msg += "%s [%s](%s)\n" % (str(r.elapsed).replace('.', '\.'), name, escaped)
+            msg += "%s [%s](%s)\n" % (str(r.elapsed).replace('.', '\.'), name, url_escaped)
             return 0
-        errors += "Status code %s on [%s](%s)\n" % (r.status_code, name, escaped)
+        errors += "Status code %s on [%s](%s)\n" % (r.status_code, name, url_escaped)
+
     except requests.exceptions.Timeout:
-        errors += "Timeout on [%s](%s)\n" % (name, escaped)
+        errors += "Timeout on [%s](%s)\n" % (name, url_escaped)
     except requests.exceptions.ConnectionError:
-        errors += "Connection failed [%s](%s)\n" % (name, escaped)
+        errors += "Connection failed [%s](%s)\n" % (name, url_escaped)
 
 
 if __name__ == "__main__":
 
+    verbose = False
     try:
         verbose = sys.argv[1] == '-v'
     except:
-        verbose = False
-            
+        pass
+                
     #verbose = True # Force verbose mode
     #check_folders("/foo") # Force an error
     
-    check_folders("/media/photoshow")
+    check_folders("/media/photoshow/bridges")
+    check_folders("/media/photoshow/waterway")
+    check_folders("/media/surveys")
 
     urls = [
         #testing
         #"https://giscache.co.clatsop.or.us/missing",
-        ("https://giscache.co.clatsop.or.us/", "GISCache"),
-        ("https://giscache.co.clatsop.or.us/county-aerials/demo/?srs=EPSG%3A3857&format=image%2Fjpeg&wms_layer=osip2018", "OSIP 2018 aerial"),
-        ("https://capacity.co.clatsop.or.us/cases/", "COVID19 cases"),
-        ("https://delta.co.clatsop.or.us/apps/ClatsopCounty", "CC Webmaps App"),
-        ("https://delta.co.clatsop.or.us/apps/PlanningApp", "CC Planning App"),
+        ("https://giscache.co.clatsop.or.us/", "cc-giscache"),
+        ("https://giscache.co.clatsop.or.us/county-aerials/demo/?srs=EPSG%3A3857&format=image%2Fjpeg&wms_layer=osip2018", "cc-giscache OSIP 2018 aerial"),
+        ("https://capacity.co.clatsop.or.us/cases/", "cc-giscache COVID19 cases"),
+        ("https://delta.co.clatsop.or.us/apps/ClatsopCounty", "Delta CC Webmaps App"),
+        ("https://delta.co.clatsop.or.us/apps/PlanningApp", "Delta Planning App"),
         ("https://delta.co.clatsop.or.us/portal", "Delta Portal"),
         ("https://delta.co.clatsop.or.us/server", "Delta Server"),
-        ("http://cc-testmaps.clatsop.co.clatsop.or.us:5000", "ArcGIS License Monitor"),
-        ("https://giscache.co.clatsop.or.us/photoshow", "Photoshow"),
+        ("http://cc-testmaps.clatsop.co.clatsop.or.us:5000", "cc-testmaps ArcGIS License Monitor"),
+        ("http://cc-testmaps.clatsop.co.clatsop.or.us:3344", "cc-testmaps WABDE"),
+        ("https://cc-testmaps.clatsop.co.clatsop.or.us:3001", "cc-testmaps EXB"),
+        ("https://giscache.co.clatsop.or.us/photoshow", "cc-giscache Photoshow"),
+        ("https://webforms.co.clatsop.or.us", "cc-giscache WebHooks"),
     ]
-    msg += "Web services\n"
+
     for url,name in urls:
         check_url(url,name)
 
