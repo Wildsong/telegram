@@ -57,6 +57,20 @@ Set up the conda environment as for "notify.py" and put the script on your path.
 cp healthcheck.py config.py ~/bin
 ```
 
+## bot
+
+Accepts commands and responds to them. The commands are
+
+```bash
+/hello
+/weather
+```
+
+Install the noaa-sdk package to read weather conditions.
+
+```bash
+pip install noaa-sdk
+```
 
 ## Docs
 
