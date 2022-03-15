@@ -87,7 +87,7 @@ if __name__ == "__main__":
         ("http://cc-testmaps.clatsop.co.clatsop.or.us:3344", "cc-testmaps WABDE"),
         ("https://cc-testmaps.clatsop.co.clatsop.or.us:3001", "cc-testmaps EXB"),
         ("https://giscache.co.clatsop.or.us/photoshow", "cc-giscache Photoshow"),
-        ("https://webforms.co.clatsop.or.us", "cc-giscache WebHooks"),
+        ("https://echo.co.clatsop.or.us", "cc-giscache Matomo"),
     ]
 
     for url,name in urls:
