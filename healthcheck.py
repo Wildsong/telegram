@@ -40,7 +40,7 @@ def check_url(url,name):
     # Note, you can set timeout to .001 to test timeouts.
     # Normally it should be high enough to accomodate slow services
     # such as the map proxy.
-    t = 8 
+    t = 20 
     url_escaped = url.replace(')', '\)')
     name = name.replace('-', '\-')
     try:
