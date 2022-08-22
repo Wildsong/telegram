@@ -7,9 +7,11 @@ import requests
 from requests.sessions import merge_setting
 import telegram
 from config import Config
+from datetime import datetime
 
 msg = ""
 errors = ""
+now = datetime.now()
 
 def check_folders(mountpoint):
     """
@@ -86,7 +88,7 @@ if __name__ == "__main__":
         ("http://cc-testmaps.clatsop.co.clatsop.or.us:5000", "cc-testmaps ArcGIS License Monitor"),
         ("http://cc-testmaps.clatsop.co.clatsop.or.us:3344", "cc-testmaps WABDE"),
         ("https://cc-testmaps.clatsop.co.clatsop.or.us:3001", "cc-testmaps EXB"),
-        ("https://giscache.co.clatsop.or.us/photoshow", "cc-giscache Photoshow"),
+        ("https://giscache.co.clatsop.or.us/photos/static", "cc-giscache Photos server"),
         ("https://echo.co.clatsop.or.us/matomo.php", "cc-giscache Matomo"),
     ]
 
@@ -102,15 +104,15 @@ if __name__ == "__main__":
 
     mode = telegram.ParseMode.MARKDOWN_V2
     if verbose and len(msg)>0:
-        msg = "*Report from " + hostname + "*\n" + msg
+        msg = f"*Report from {hostname} at {now}*\n" + msg
         print(msg)
         rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=msg)
         #print(rval)
     
     if len(errors)>0:
-        errors = "*ERRORS on " + hostname + "*\n" + errors
-        print(errors)
-        rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=errors)
+        msg = f"*Errors on {hostname} at {now}*\n" + errors
+        print(msg)
+        rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=msg)
         #print(rval)
 
     exit(0)
