@@ -1,5 +1,3 @@
-#!env python
-#
 import platform
 from datetime import datetime
 import telegram
