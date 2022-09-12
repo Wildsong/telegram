@@ -110,22 +110,21 @@ if __name__ == "__main__":
 
     # The print statements here generate email via crontab
 
-    hostname = platform.node()
-
-    mode = telegram.ParseMode.MARKDOWN_V2
-    if verbose and len(msg)>0:
-        msg = f"*Report from {hostname} at {now}*\n" + msg
-        print(msg)
-        rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=telegram_escape(msg))
-        #print(rval)
-
+    my_hostname = platform.node()
     status = 0
 
     if len(errors)>0:
-        msg = f"*Errors on {hostname} at {now}*\n" + errors
+        msg = f"*Errors on {my_hostname} at {now}*\n" + errors + "\n"
         print(msg)
         rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=telegram_escape(msg))
         #print(rval)
         status = -1
+
+    mode = telegram.ParseMode.MARKDOWN_V2
+    if verbose and len(msg)>0:
+        msg = f"*Report from {my_hostname} at {now}*\n" + msg
+        print(msg)
+        rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=telegram_escape(msg))
+        #print(rval)
 
     exit(status)
