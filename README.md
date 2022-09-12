@@ -3,7 +3,7 @@
 Telegram is a messaging system similar to WhatsApp but not owned by Facebook.
 
 I set up this repo to create some tests in Python.
-My intention at this time is to use Telegram to send system status information to my phone.
+I use it with Telegram to send system status information to my phone.
 
 ## Set up
 
@@ -28,7 +28,7 @@ chmod +x ~/.conda/envs/telegram/etc/conda/activate.d/env_vars.sh
 ```
 
 ```bash
-conda create -n telegram python python-telegram-bot python-dotenv -c conda-forge
+conda create -n telegram python python-telegram-bot python-dotenv -c conda-forge requests
 conda activate telegram
 python send_message.py
 ```
