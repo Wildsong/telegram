@@ -1,4 +1,3 @@
-#!/usr/bin/env -S conda run -n telegram --no-capture-output python
 import sys
 import os
 import platform
@@ -43,20 +42,31 @@ def check_url(url,name):
     # Normally it should be high enough to accomodate slow services
     # such as the map proxy.
     t = 20 
-    url_escaped = url.replace(')', '\)')
-    name = name.replace('-', '\-')
     try:
         r = requests.get(url, timeout=t, verify=False)
         if r.status_code == 200: 
-            msg += "%s [%s](%s)\n" % (str(r.elapsed).replace('.', '\.'), name, url_escaped)
+            msg += "%s [%s](%s)\n" % (str(r.elapsed), name, url)
             return 0
-        errors += "Status code %s on [%s](%s)\n" % (r.status_code, name, url_escaped)
+        errors += "Status code %s on [%s](%s)\n" % (r.status_code, name, url)
 
     except requests.exceptions.Timeout:
-        errors += "Timeout on [%s](%s)\n" % (name, url_escaped)
+        errors += "Timeout on [%s](%s)\n" % (name, url)
+        
     except requests.exceptions.ConnectionError:
-        errors += "Connection failed [%s](%s)\n" % (name, url_escaped)
+        errors += "Connection failed [%s](%s)\n" % (name, url)
 
+    except Exception as e:
+        errors += "999999 Unkempt error\n" + e
+
+def telegram_escape(t):
+    """ Telegram objects to some characters and wants them escaped. """
+    t = t.replace(')', '\)')
+    t = t.replace('(', '\(')
+    t = t.replace('-', '\-')
+    t = t.replace('_', '\_')
+    t = t.replace('=', '\=')
+    t = t.replace('.', '\.')
+    return t
 
 if __name__ == "__main__":
 
@@ -100,20 +110,22 @@ if __name__ == "__main__":
 
     # The print statements here generate email via crontab
 
-    hostname = platform.node().replace('-','\-')
+    hostname = platform.node()
 
     mode = telegram.ParseMode.MARKDOWN_V2
     if verbose and len(msg)>0:
         msg = f"*Report from {hostname} at {now}*\n" + msg
         print(msg)
-        rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=msg)
+        rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=telegram_escape(msg))
         #print(rval)
-    
+
+    status = 0
+
     if len(errors)>0:
         msg = f"*Errors on {hostname} at {now}*\n" + errors
         print(msg)
-        rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=msg)
+        rval = bot.send_message(chat_id=Config.CHAT_ID, parse_mode=mode, text=telegram_escape(msg))
         #print(rval)
+        status = -1
 
-    exit(0)
-
+    exit(status)
